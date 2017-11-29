@@ -1,0 +1,17 @@
+总结一下IIS运行过程及ASP.NET管道机制：
+ 
+     Request→ (Internet ) HTTP.sys 监听
+     → WAS (IIS6 web Admin Service /IIS7 (Windows Activation Service) 接收请求
+     → (传入)Application Pool's → w3wp.exe(检查URL后缀)
+     → (加载)ISAPI扩展[aspnet_isapi.dll] → 注册映射 构造HttpRuntime类
+     →ProcessRequest方法  HttpContext实例产生(Request,Response,Session and so on…)
+ 
+　HttpRuntime 调用 HttpApplicationFactory加载HttpApplication对象
+ 
+　穿越HttpModule到达HttpHandler
+ 
+　简单用140个字符(即一条微博的字数)概括:
+ 
+　Request→ (Internet ) HTTP.sys →(WAS)→Application Pool's → w3wp.exe→ISAPI→ Map→   (Pipeline)         
+　HttpWorkerRequest→AppDomain→HttpRuntime→ProcessRequest()→ HttpContext(Request,Response)
+　　→ HttpRuntime→HttpApplicationFactory→HttpApplication→ HttpModule→HttpHandler→EndRequest
